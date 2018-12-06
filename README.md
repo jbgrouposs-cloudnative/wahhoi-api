@@ -1,16 +1,23 @@
 # wahhoi-api
 
----
-
 ## 概要
 
 wahhoi するAPIです。
 
 ## Usage
 
+.env を作成
+
 ~~~
-gradlew build
-docker build -t wahhoiserver
-docker run -p 8080:8080 -t wahhoiserver
+/* .env */
+MY_ADDR= 自分のIP
+STORE_HOST= MySQLのホスト:ポート
+MYSQL_ROOT_PASSWORD= MySQLのルートパスワード
+~~~
+
+docker-compose 起動
+
+~~~
+docker-compose up
 ~~~
 
