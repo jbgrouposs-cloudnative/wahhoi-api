@@ -27,3 +27,6 @@
 
 ### VSCode ###
 *.code-workspace
+
+/bin/
+
