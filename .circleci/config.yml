@@ -1,0 +1,59 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              py-pip=9.0.0-r1
+            pip install \
+              awscli
+      - restore_cache:
+          keys:
+            - {{ .Branch }}
+          paths:
+            - /caches/wahhoi.tar
+      - run:
+          name: Load Docker Image Layer from Cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/wahhoi.tar | true
+      - run:
+          name: gradlew build
+          command: gradlew build
+      - run:
+          name: docker build
+          command: docker build -t wahhoi .
+      - run:
+          name: Save Docker Image Layer to Cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/wahhoi.tar wahhoi
+      - save_cache:
+          key: "{{ .Branch }}-{{ epoch }}"
+          paths:
+            - /caches/wahhoi.tar
+      - run:
+          name: test
+          command: dockker run -p 8080:8080 wahhoi
+      - deploy:
+          name: Push application Docker image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              login="$(aws ecr get-login)"
+              ${login}
+              docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+              docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+            fi
+
+workflows:
+  version: 2
+  validate_and_deploy:
+    jobs:
+      - build

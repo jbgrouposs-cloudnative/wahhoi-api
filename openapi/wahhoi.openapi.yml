@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: 'WAHHOI API'
+  version: '1.0.0'
+  contact:
+    name: example
+    email: contact@example.com
+    url: https://example.com/
+tags:
+  - name: Metadata
+    description: Metadata related requests
+paths:
+  /v1/wahhoi:
+    get:
+      tags:
+        - WAHHOI
+      summary: WAHHOI
+      description: WAHHOI
+      parameters: []
+      responses:
+        '200':
+          description: A WAHHOI MESSAGE
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: WAHHOI!
+    post:
+      tags:
+        - WAHHOI
+      summary: Create a new WAHHOI
+      description: Create a new WAHHOI
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/WahhoiBody'
+      responses:
+        '201':
+          description: CREATED
+  /v1/wahhoi/{id}:
+    get:
+      tags:
+        - WAHHOI
+      summary: Get WAHHOI by ID.
+      description: Get WAHHOI by ID.
+      parameters:
+        - name: id
+          in: path
+          description: WAHHOI ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/GetWahhoiById'
+    put:
+      tags:
+        - WAHHOI
+      description: Replace WAHHOI by ID.
+      parameters:
+        - name: id
+          in: path
+          description: WAHHOI ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/PutWahhoi'
+    delete:
+      tags:
+        - WAHHOI
+      description: Replace WAHHOI by ID.
+      parameters:
+        - name: id
+          in: path
+          description: WAHHOI ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/DeleteWahhoi'
+components:
+  schemas:
+    WAHHOI:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+  requestBodies:
+    WahhoiBody:
+      description: A JSON object containing WAHHOI information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WAHHOI'
+          example:
+            id: 1
+            name: GDX
+  responses:
+    GetWahhoi:
+      description: WAHHOI!
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: WAHHOI!
+    GetWahhoiById:
+      description: A single WAHHOI object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WAHHOI'
+    PostWahhoi:
+      description: CREATED
+    PutWahhoi:
+      description: UPDATED
+    DeleteWahhoi:
+      description: DELETED

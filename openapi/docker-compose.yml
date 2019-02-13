@@ -1,0 +1,11 @@
+version: '3'
+services: 
+  builder:
+    build:
+      context: .
+      args:
+        - PROXY=${PROXY}
+        - OPENAPI_SPEC_FILE=${OPENAPI_SPEC_FILE}
+        - GENERATE_LANG=${GENERATE_LANG}
+    volumes:
+      - "${OUT}:/home/out"
