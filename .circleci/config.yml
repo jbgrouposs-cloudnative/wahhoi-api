@@ -7,6 +7,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - restore_cache:
+          keys:
+            - wahhoi-test-{{ .Branch }}
+          paths:
+            - ~/caches/wahhoi.tar
       - run:
           name: Install dependencies
           command: |
@@ -15,11 +20,6 @@ jobs:
               python-pip
             sudo pip install \
               awscli
-      - restore_cache:
-          keys:
-            - wahhoi-test-{{ .Branch }}
-          paths:
-            - ~/caches/wahhoi.tar
       - run:
           name: Load Docker Image Layer from Cache
           command: |
