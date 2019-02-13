@@ -48,12 +48,12 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               login="$(aws ecr get-login)"
               ${login}
-              docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-              docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+              docker tag app "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
+              docker push "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
             fi
 
 workflows:
   version: 2
-  validate_and_deploy:
+  build:
     jobs:
       - build
