@@ -17,7 +17,7 @@ jobs:
               awscli
       - restore_cache:
           keys:
-            - wahhoi-{{ .Branch }}
+            - wahhoi-test-{{ .Branch }}
           paths:
             - ~/caches/wahhoi.tar
       - run:
@@ -41,7 +41,7 @@ jobs:
             mkdir -p ~/caches
             docker save -o ~/caches/wahhoi.tar wahhoi:tmp
       - save_cache:
-          key: wahhoi-{{ .Branch }}-{{ epoch }}
+          key: wahhoi-test-{{ .Branch }}-{{ epoch }}
           paths:
             - ~/caches/wahhoi.tar
       - deploy:
