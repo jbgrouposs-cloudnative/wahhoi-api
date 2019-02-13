@@ -33,27 +33,25 @@ jobs:
           working_directory: wahhoi-api
       - run:
           name: docker build
-          command: docker build -t wahhoi .
+          command: docker build -t wahhoi:tmp .
           working_directory: wahhoi-api
       - run:
           name: Save Docker Image Layer to Cache
           command: |
             sudo mkdir -p /caches
-            sudo docker save -o /caches/wahhoi.tar wahhoi
+            docker save -o ~/wahhoi.tar wahhoi:tmp
+            sudo mv ~/wahhoi.tar /caches/wahhoi.tar 
       - save_cache:
           key: wahhoi-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/wahhoi.tar
-      - run:
-          name: test
-          command: docker run -p 8080:8080 wahhoi
       - deploy:
           name: Push application Docker image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               login="$(aws ecr get-login)"
               ${login}
-              docker tag app "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
+              docker tag wahhoi:tmp "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
               docker push "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
             fi
 workflows:
