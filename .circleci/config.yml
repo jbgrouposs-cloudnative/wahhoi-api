@@ -41,7 +41,7 @@ jobs:
             - /caches/wahhoi.tar
       - run:
           name: test
-          command: dockker run -p 8080:8080 wahhoi
+          command: docker run -p 8080:8080 wahhoi
       - deploy:
           name: Push application Docker image
           command: |
@@ -51,7 +51,6 @@ jobs:
               docker tag app "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
               docker push "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
             fi
-
 workflows:
   version: 2
   build_and_deploy:
