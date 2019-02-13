@@ -19,12 +19,12 @@ jobs:
           keys:
             - wahhoi-{{ .Branch }}
           paths:
-            - /caches/wahhoi.tar
+            - ~/caches/wahhoi.tar
       - run:
           name: Load Docker Image Layer from Cache
           command: |
             set +o pipefail
-            docker load -i /caches/wahhoi.tar | true
+            docker load -i ~/caches/wahhoi.tar | true
       - run:
           name: gradlew build
           command: |
@@ -38,13 +38,12 @@ jobs:
       - run:
           name: Save Docker Image Layer to Cache
           command: |
-            sudo mkdir -p /caches
-            docker save -o ~/wahhoi.tar wahhoi:tmp
-            sudo mv ~/wahhoi.tar /caches/wahhoi.tar 
+            mkdir -p ~/caches
+            docker save -o ~/caches/wahhoi.tar wahhoi:tmp
       - save_cache:
           key: wahhoi-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/wahhoi.tar
+            - ~/caches/wahhoi.tar
       - deploy:
           name: Push application Docker image
           command: |
