@@ -48,8 +48,7 @@ jobs:
           name: Push application Docker image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              login="$(aws ecr get-login)"
-              ${login}
+              $(aws ecr get-login --no-include-email --region us-west-2)
               docker tag wahhoi:tmp "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
               docker push "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
             fi
