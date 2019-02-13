@@ -36,7 +36,7 @@ jobs:
             mkdir -p /caches
             docker save -o /caches/wahhoi.tar wahhoi
       - save_cache:
-          key: "{{ .Branch }}-{{ epoch }}"
+          key: {{ .Branch }}-{{ epoch }}
           paths:
             - /caches/wahhoi.tar
       - run:
