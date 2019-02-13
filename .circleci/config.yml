@@ -3,7 +3,7 @@ version: 2
 jobs:
   build_wahhoi:
     docker:
-      - image: circleci/openjdk
+      - image: circleci/openjdk:8-jdk
     steps:
       - checkout
       - setup_remote_docker
