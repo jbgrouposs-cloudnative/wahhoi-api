@@ -39,7 +39,7 @@ jobs:
           name: Save Docker Image Layer to Cache
           command: |
             mkdir -p /caches
-            docker save -o /caches/wahhoi.tar wahhoi
+            sudo docker save -o /caches/wahhoi.tar wahhoi
       - save_cache:
           key: wahhoi-{{ .Branch }}-{{ epoch }}
           paths:
