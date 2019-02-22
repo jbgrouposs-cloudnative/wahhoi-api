@@ -17,14 +17,14 @@ spec:
         image: 659905521232.dkr.ecr.us-west-2.amazonaws.com/wahhoi:0d98156c616696e0c8555fca19c486d7a8fb1189
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "512Mi"
+            cpu: "500m"
           limits:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "512Mi"
+            cpu: "500m"
         env:
-          - name: SPRING_DATASOURCE_URI
-            value: "jdbc:mysql//db.wahhoi.gdx.local:3306"
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:mysql://mysql.wahhoi.svc.cluster.local:3306/wahhoi"
           - name: SPRING_DATASOURCE_USERNAME
             value: "root"
           - name: SPRING_DATASOURCE_PASSWORD
