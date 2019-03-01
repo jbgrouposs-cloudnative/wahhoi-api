@@ -52,8 +52,80 @@ jobs:
               docker tag wahhoi:tmp "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
               docker push "${ECR_ENDPOINT}:${CIRCLE_SHA1}"
             fi
+  get_cve:
+    machine: true
+    steps:
+      - restore_cache:
+          keys:
+            - cve-{{ .Branch }}
+          paths:
+            - /tmp/cve.sqlite3
+      - run:
+          name: fetch NVD
+          command: |
+            for i in `seq 2002 $(date +"%Y")`; do docker run --rm -it -v /tmp:/vuls vuls/go-cve-dictionary fetchnvd -years $i; done
+      - run:
+          name: fetch CVE
+          command: |
+            for i in `seq 2002 $(date +"%Y")`; do docker run --rm -it -v /tmp:/vuls vuls/go-cve-dictionary fetchjvn -years $i; done
+      - save_cache:
+          key: cve-{{ .Branch }}
+          paths:
+            - /tmp/cve.sqlite3
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - cve.sqlite3
+  get_oval:
+    machine: true
+    steps:
+      - restore_cache:
+          keys:
+            - oval-{{ .Branch }}
+          paths:
+            - /tmp/oval.sqlite3
+      - run:
+          name: fetch oval
+          command: docker run --rm -it -v /tmp:/vuls vuls/goval-dictionary fetch-alpine 3.3 3.4 3.5 3.6 3.7
+      - save_cache:
+          key: oval-{{ .Branch }}
+          paths:
+            - /tmp/oval.sqlite3
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - oval.sqlite3
+  scan:
+    docker:
+      - image: nidstyle3/vuls-onbuild:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: run container
+          command: docker run -d "${ECR_ENDPOINT}:${CIRCLE_SHA1}" sleep 60
+      - run:
+          name: config test
+          command: vuls configtest -config=./config.toml
+      - run:
+          name: scan
+          command: vuls scan -config=./config.toml
+      - run:
+          name: report
+          command: vuls report -config=./config.toml
+
 workflows:
   version: 2
   build_and_deploy:
     jobs:
       - build_wahhoi
+      - get_cve
+      - get_oval
+      - scan:
+          requires:
+            - build_wahhoi
+            - get_cve
+            - get_oval

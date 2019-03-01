@@ -1,0 +1,15 @@
+[servers]
+
+[servers.vuls-ci]
+host         = "localhost"
+port        = "local"
+scanMode = ["deep"]
+containers = ["${running}"]
+
+[cveDict]
+type = "sqlite3"
+SQLite3Path = "/tmp/cve.sqlite3"
+
+[ovalDict]
+type = "sqlite3"
+SQLite3Path = "/tmp/oval.sqlite3"
