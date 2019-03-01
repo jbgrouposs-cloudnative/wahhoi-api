@@ -106,7 +106,9 @@ jobs:
           at: /tmp
       - run:
           name: run container
-          command: docker run -d "${ECR_ENDPOINT}:${CIRCLE_SHA1}" sleep 60
+          command: |
+            $(aws ecr get-login --no-include-email --region us-west-2)
+            docker run -d "${ECR_ENDPOINT}:${CIRCLE_SHA1}" sleep 60
       - run:
           name: config test
           command: vuls configtest -config=./config.toml
