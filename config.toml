@@ -1,8 +1,6 @@
 [servers]
 
-[servers.vuls-ci]
-host         = "localhost"
-port        = "local"
+[servers.container]
 scanMode = ["deep"]
 containers = ["${running}"]
 
