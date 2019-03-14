@@ -25,7 +25,7 @@ public class WahhoiContoller {
     @GetMapping()
     public String getWahhoi() {
         System.out.println("[GET] /v1/wahhoi");
-        return "WAHHOI!";
+        return "WAHHOI GUNDAM DX!";
     }
 
     @GetMapping("{id}")
